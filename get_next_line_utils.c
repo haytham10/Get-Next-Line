@@ -6,7 +6,7 @@
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 07:47:14 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/11/23 08:36:14 by hmokhtar         ###   ########.fr       */
+/*   Updated: 2021/11/27 01:23:42 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,69 +22,102 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned char	*str;
-
-	str = (unsigned char *)s;
-	while (n--)
-	{
-		*str = '\0';
-		str++;
-	}
-}
-
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t			i;
-	unsigned char	*s1;
-	unsigned char	*s2;
-
-	if (!dest && !src)
-		return (NULL);
-	i = 0;
-	s1 = (unsigned char *)dest;
-	s2 = (unsigned char *)src;
-	while (i < n)
-	{
-		s1[i] = s2[i];
-		i++;
-	}
-	return (dest);
-}
-
-static char	*my_strcat(char *dest, const char *src)
+char	*ft_strchr(const char *str, int c)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
-	while (dest[i] != '\0')
-		i++;
-	while (src[j] != '\0')
+	if (!str)
+		return (0);
+	if (c)
+		return ((char *)&str[i]);
+	while (str[i])
 	{
-		dest[i] = src[j];
-		j++;
+		if (str[i] == (char)c)
+			return ((char *)&str[i]);
 		i++;
 	}
-	dest[i] = '\0';
-	return (dest);
+	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *rem_str, char *buff)
 {
-	char	*res;
+	size_t	i;
+	size_t	j;
+	char	*str;
 
-	if (!s1 || !s2)
-		return (NULL);
-	res = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!res)
-		return (NULL);
-	else if (res)
+	if (!rem_str)
 	{
-		ft_memcpy(res, s1, ft_strlen(s1) + 1);
-		my_strcat(res, s2);
+		rem_str = (char *)malloc(1 * sizeof(char));
+		rem_str[0] = '\0';
 	}
-	return (res);
+	if (!rem_str || !buff)
+		return (NULL);
+	str = malloc(sizeof(char) * ((ft_strlen(rem_str) + ft_strlen(buff)) + 1));
+	if (str == NULL)
+		return (NULL);
+	i = -1;
+	j = 0;
+	if (rem_str)
+		while (rem_str[++i] != '\0')
+			str[i] = rem_str[i];
+	while (buff[j] != '\0')
+		str[i++] = buff[j++];
+	str[ft_strlen(rem_str) + ft_strlen(buff)] = '\0';
+	free(rem_str);
+	return (str);
+}
+
+char	*get_line(char *rem_str)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	if (!rem_str[i])
+		return (NULL);
+	while (rem_str[i] && rem_str[i] != '\n')
+		i++;
+	str = (char *)malloc(sizeof(char) * (i + 2));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (rem_str[i] && rem_str[i] != '\n')
+	{
+		str[i] = rem_str[i];
+		i++;
+	}
+	if (rem_str == '\n')
+	{
+		str[i] = rem_str[i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);			
+}
+
+char	*new_line(char *rem_str)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	i = 0;
+	while (rem_str[i] && rem_str[i] != '\n')
+		i++;
+	if (!rem_str[i])
+	{
+		free(rem_str);
+		return (NULL);
+	}
+	str = (char *)malloc(sizeof(char) * (ft_strlen(rem_str) - i + 1));
+	if (!str)
+		return (NULL);
+	i++;
+	j = 0;
+	while (rem_str[i])
+		str[j++] = rem_str[i++];
+	str[j] = '\0';
+	free(rem_str);
+	return (str);
 }

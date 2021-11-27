@@ -6,40 +6,47 @@
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 07:47:19 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/11/26 16:44:46 by hmokhtar         ###   ########.fr       */
+/*   Updated: 2021/11/27 01:06:16 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
 
-void	ft_putchar(char c)
+char	*read_line(int fd, char *rem_str)
 {
-	write(1, &c, 1);
-}
+	char	*buff;
+	int		byt;
 
-void	ft_putstr(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
+	buff = malloc(sizeof(char) * (BUFF_SIZE + 1));
+	if (!buff)
+		return (NULL);
+	byt = 1;
+	while (!ft_strchr(rem_str, '\n') && byt != 0)
 	{
-		write(1, &str[i], 1);
-		i++;
+		byt = read(fd, buff, BUFF_SIZE);
+		if (byt == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[byt] = '\0';
+		rem_str = ft_strjoin(rem_str, buff);
 	}
+	free(buff);
+	return (rem_str);
 }
 
-//char	*get_next_line(int fd)
-int	main()
+char	*get_next_line(int fd)
 {
-	FILE *the_file = fopen("sample.txt", "r");
-	if (the_file == NULL)
+	char	*line;
+	static char	*rem_str;
+
+	if (fd < 0 || BUFF_SIZE <= 0)
 		return (0);
-	int BUFFSIZE = 2;
-	char	line[BUFFSIZE];
-	while (fgets(line, (sizeof(line) * BUFFSIZE), the_file))
-		ft_putstr(line);	
+	rem_str = read_line(fd, rem_str);
+	if (!rem_str)
+		return (NULL);
+	line = get_line(rem_str);
+	rem_str = new_line(rem_str);
+	return (line);
 }
