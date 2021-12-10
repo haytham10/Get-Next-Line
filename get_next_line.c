@@ -5,98 +5,107 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/09 15:10:10 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/12/09 15:35:59 by hmokhtar         ###   ########.fr       */
+/*   Created: 2021/12/10 19:26:47 by hmokhtar          #+#    #+#             */
+/*   Updated: 2021/12/10 19:26:50 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-static char	*ft_firstline(char *res, int r)
-{
-	char	*tmp;
-	int		i;
+#include "get_next_line.h"
 
-	i = 0;
-	while (r > 0)
-	{
-		while (res[i])
-		{
-			if (res[i] == '\n')
-				break ;
-			i++;
-		}
-		tmp = malloc(i + 2);
-		if (!tmp)
-			return (NULL);
-		i = 0;
-		while (res[i] && res[i] != '\n')
-		{
-			tmp[i] = res[i];
-			i++;
-		}
-		tmp[i] = '\n';
-		tmp[i + 1] = 0;
-		return (tmp);
-	}
+static char	*alloc_buff(*buff)
+{
+	buff = (char *)malloc(BUFFER_SIZE + 1) * (sizeof(char));
+	if (!buff)
+		return (NULL);
+	return (buff);
 }
 
-static char	*ft_rest(char *res)
+static char	*alloc_res(char *res, char *buff)
 {
-	char	*tmp;
+	if (!res)
+		res = ft_strdup(buff);
+	else
+		res = ft_strjoin(res, buff);
+	return (res);
+}
+
+static char	*get_line(char *res, int byt)
+{
+	char	*new_buff;
 	int		i;
-	int		j;
 
 	i = 0;
-	j = 0;
-	while (res[i])
+	new_buff = NULL;
+	if (byt == 0 && *res == '\0')
+		return (free(res), NULL);
+	while (res[i] != '\0')
 	{
 		if (res[i] == '\n')
 			break ;
 		i++;
 	}
-	tmp = malloc(ft_strlen(res) - i + 2);
-	if (!tmp)
-		retunr (NULL);
-	while (res[i] && res[i] != '\n')
-		i++;
 	if (res[i] == '\n')
 	{
-		i++;
-		while (res[i])
-		{
-			tmp[j] = res[i];
-			j++;
-			i++;
-		}
-		tmp[j] = 0;	
+		new_buff = (char *)malloc((i + 2) * sizeof(char));
+		if (!new_buff)
+			return (NULL);
+		ft_memcpy(new_buff, res, i);
+		new_buff[i] = '\n';
+		new_buff[i + 1] = '\0';
+		return (new_buff);
 	}
-	return (tmp);
+	new_buff = ft_strdup(res);
+	return (free(res), res = NULL, new_buff);
+}
+
+static char	*get_res(char *res)
+{
+	char	*tmp;
+	int		i;
+
+	tmp = NULL;
+	i = 0;
+	while (res[i] != '\0')
+	{
+		if (res[i] == '\n')
+			break ;
+		i++;
+	}
+	if (res[i] == '\n')
+	{
+		tmp = ft_strdup(res + i + 1);
+		free(res);
+		res = tmp;
+		return (res);
+	}
+	res = NULL;
+	return (res);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*res;
-	char		*buf;
-	char		*firstline;
-	int 		r;
+	char		*buff;
+	char		*line;
+	int			byt;
 
-	buf = malloc(BUFFER_SIZE + 1);
-	if (!buf)
-		retunr (NULL);
-	r = 1;
-	while(r > 0)
+	byt = 1;
+	res = NULL;
+	buff = NULL;
+	line = NULL;
+	buff = alloc_buff(buff);
+	if (res && ft_strchr(res, '\n'))
+		byt = 0;
+	while (byt > 0)
 	{
-		r = read(fd, buf, BUFFER_SIZE);
-		if(r == -1)
-			return (NULL);
-		buf[r] = 0;
-		if(!res)
-			res = ft_stdup(buf);
-		else
-			res = ft_strjoin(res, buf);
-		if(ft_strchr(res, '\n'))
+		byt = read(fd, buff, BUFFER_SIZE);
+		if (byt < 0)
+			return (free(buff), NULL);
+		buff[byt] = '\0';
+		res = alloc_res(res, buff);
+		if (ft_strchr(res, '\n'))
 			break ;
 	}
-	firstline = ft_firstline(res, r);
-	res = ft_rest(res);
-	return (firstline);
+	free(buff);
+	return (line = get_line(res, byt), res = get_res(res), line);
 }

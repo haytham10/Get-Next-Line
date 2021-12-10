@@ -6,23 +6,14 @@
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 07:47:14 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/12/09 16:56:34 by hmokhtar         ###   ########.fr       */
+/*   Updated: 2021/12/10 19:29:50 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_strlen(const char *str)
-{
-	int	i;
 
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-static void	*ft_memcpy(void *dest, const void *src, size_t n)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t			i;
 	unsigned char	*s1;
@@ -41,6 +32,18 @@ static void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
+size_t	ft_strlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
+}
+
 char	*ft_strdup(const char *s1)
 {
 	char	*s2;
@@ -52,40 +55,26 @@ char	*ft_strdup(const char *s1)
 	return (s2);
 }
 
-static char	*my_strcat(char *dest, const char *src)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	int	i;
-	int	j;
+	int		max_len;
+	char	*s;
+	size_t	len1;
+	size_t	len2;
 
-	i = 0;
-	j = 0;
-	while (dest[i] != '\0')
-		i++;
-	while (src[j] != '\0')
-	{
-		dest[i] = src[j];
-		j++;
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*res;
-
-	if (!s1 || !s2)
+	if (!s1)
+		return ((char *)s2);
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	max_len = ft_strlen(s1) + ft_strlen(s2);
+	s = malloc(max_len + 1);
+	if (!s)
 		return (NULL);
-	res = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!res)
-		return (NULL);
-	else if (res)
-	{
-		ft_memcpy(res, s1, ft_strlen(s1) + 1);
-		my_strcat(res, s2);
-	}
-	return (res);
+	ft_memcpy(s, s1, len1);
+	ft_memcpy(s + len1, s2, len2);
+	s[max_len] = '\0';
+	free((char *)s1);
+	return (s);
 }
 
 char	*ft_strchr(const char *str, int c)
