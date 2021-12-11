@@ -6,15 +6,15 @@
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:26:47 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/12/10 19:26:50 by hmokhtar         ###   ########.fr       */
+/*   Updated: 2021/12/10 21:43:27 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*alloc_buff(*buff)
+static char	*alloc_buff(char *buff)
 {
-	buff = (char *)malloc(BUFFER_SIZE + 1) * (sizeof(char));
+	buff = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buff)
 		return (NULL);
 	return (buff);
@@ -58,28 +58,28 @@ static char	*get_line(char *res, int byt)
 	return (free(res), res = NULL, new_buff);
 }
 
-static char	*get_res(char *res)
+static char	*get_res(char *str)
 {
 	char	*tmp;
 	int		i;
 
 	tmp = NULL;
 	i = 0;
-	while (res[i] != '\0')
+	while (str[i] != '\0')
 	{
-		if (res[i] == '\n')
+		if (str[i] == '\n')
 			break ;
 		i++;
 	}
-	if (res[i] == '\n')
+	if (str[i] == '\n')
 	{
-		tmp = ft_strdup(res + i + 1);
-		free(res);
-		res = tmp;
-		return (res);
+		tmp = ft_strdup(str + i + 1);
+		free(str);
+		str = tmp;
+		return (str);
 	}
-	res = NULL;
-	return (res);
+	str = NULL;
+	return (str);
 }
 
 char	*get_next_line(int fd)
@@ -90,9 +90,9 @@ char	*get_next_line(int fd)
 	int			byt;
 
 	byt = 1;
-	res = NULL;
 	buff = NULL;
 	line = NULL;
+	res = NULL;
 	buff = alloc_buff(buff);
 	if (res && ft_strchr(res, '\n'))
 		byt = 0;

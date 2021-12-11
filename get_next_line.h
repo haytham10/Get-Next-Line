@@ -6,7 +6,7 @@
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 07:47:32 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/12/10 19:28:11 by hmokhtar         ###   ########.fr       */
+/*   Updated: 2021/12/10 21:18:47 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-
-# ifndef BUFFER_SIZE
-#define BUFFER_SIZE
-# endif
+# include <fcntl.h> 
 
 char	*get_next_line(int fd);
 char	*ft_strdup(const char *s1);

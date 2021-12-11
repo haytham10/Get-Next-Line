@@ -6,25 +6,24 @@
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 07:47:14 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/12/10 19:29:50 by hmokhtar         ###   ########.fr       */
+/*   Updated: 2021/12/10 22:35:41 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	size_t			i;
-	unsigned char	*s1;
-	unsigned char	*s2;
+	size_t				i;
+	unsigned char		*s1;
+	unsigned const char	*s2;
 
+	i = 0;
+	s1 = dest;
+	s2 = src;
 	if (!dest && !src)
 		return (NULL);
-	i = 0;
-	s1 = (unsigned char *)dest;
-	s2 = (unsigned char *)src;
-	while (i < n)
+	while (n--)
 	{
 		s1[i] = s2[i];
 		i++;
@@ -47,11 +46,18 @@ size_t	ft_strlen(const char *str)
 char	*ft_strdup(const char *s1)
 {
 	char	*s2;
+	int		i;
 
-	s2 = malloc(ft_strlen(s1) + 1);
-	if (s2 == NULL)
+	i = 0;
+	s2 = malloc(ft_strlen((char *)s1) + 1);
+	if (!s2)
 		return (NULL);
-	ft_memcpy(s2, s1, ft_strlen(s1) + 1);
+	while (s1[i])
+	{
+		s2[i] = s1[i];
+		i++;
+	}
+	s2[i] = '\0';
 	return (s2);
 }
 
@@ -84,11 +90,11 @@ char	*ft_strchr(const char *str, int c)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == (char)c)
+		if (str[i] == (unsigned char)c)
 			return ((char *)&str[i]);
 		i++;
 	}
-	if (str[i] == (char)c)
+	if (c == '\0')
 		return ((char *)&str[i]);
 	return (NULL);
 }
