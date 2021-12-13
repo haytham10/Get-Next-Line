@@ -6,7 +6,7 @@
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:26:47 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/12/11 23:19:37 by hmokhtar         ###   ########.fr       */
+/*   Updated: 2021/12/13 17:24:22 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,5 +107,4 @@ char	*get_next_line(int fd)
 	}
 	free(buffer);
 	return (line = get_line(rest, byt), rest = get_rest(rest), line);
-
 }
