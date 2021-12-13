@@ -6,7 +6,7 @@
 /*   By: hmokhtar <hmokhtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:26:47 by hmokhtar          #+#    #+#             */
-/*   Updated: 2021/12/13 17:24:22 by hmokhtar         ###   ########.fr       */
+/*   Updated: 2021/12/13 18:46:28 by hmokhtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,12 @@ static char	*get_rest(char *rest)
 
 char	*get_next_line(int fd)
 {
-	static char	*rest = NULL;
+	static char	*rest;
 	char		*buffer;
 	char		*line;
 	int			byt;
 
 	byt = 1;
-	line = NULL;
 	buffer = NULL;
 	buffer = alloc_buffer(buffer);
 	if (rest && ft_strchr(rest, '\n'))
